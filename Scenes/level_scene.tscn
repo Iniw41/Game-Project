@@ -1,0 +1,54 @@
+[gd_scene load_steps=9 format=3 uid="uid://2mojxlx5jklv"]
+
+[ext_resource type="PackedScene" uid="uid://du346porj7l7c" path="res://Assets/Player/player.tscn" id="1_48yt5"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f67s3"]
+sky_top_color = Color(0.0416191, 0.491844, 0.64107, 1)
+sky_horizon_color = Color(0.708245, 0.866973, 0.882761, 1)
+ground_bottom_color = Color(0.79136, 0.976049, 0.889975, 1)
+ground_horizon_color = Color(0.708245, 0.866973, 0.882761, 1)
+
+[sub_resource type="Sky" id="Sky_if0sc"]
+sky_material = SubResource("ProceduralSkyMaterial_f67s3")
+
+[sub_resource type="Environment" id="Environment_18ysi"]
+background_mode = 2
+sky = SubResource("Sky_if0sc")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kjxn6"]
+size = Vector2(10, 100)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_oub5o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3gfet"]
+next_pass = SubResource("CanvasItemMaterial_oub5o")
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.639216, 0.156863, 1)
+metallic = 0.12
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_3j7rc"]
+data = PackedVector3Array(25, 0, 25, -25, 0, 25, 25, 0, -25, -25, 0, 25, -25, 0, -25, 25, 0, -25)
+
+[node name="level_scene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_18ysi")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_kjxn6")
+surface_material_override/0 = SubResource("StandardMaterial3D_3gfet")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_3j7rc")
+
+[node name="Player" parent="." instance=ExtResource("1_48yt5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+linear_damp = 3.0
